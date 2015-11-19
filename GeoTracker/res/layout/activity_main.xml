@@ -8,16 +8,56 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.geotracker.MainActivity" >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/tvBtnAction"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="Home"
+        android:gravity="center_horizontal" />
     
-    <FrameLayout
-		android:id="@+id/fragmentContainer"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+    <GridLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       
+        >
+        <Button
+            android:id="@+id/btnHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Home" />
+
+          <Button
+              android:id="@+id/btnTrackWorkout"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:text="Track Workout" />
+  
+              <Button
+                  android:id="@+id/btnHistory"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:text="History" />
+
+    </GridLayout>
+     <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp" >
+
 	</FrameLayout>
-    
+  
+     </LinearLayout>
+
+
+  
 
 </RelativeLayout>

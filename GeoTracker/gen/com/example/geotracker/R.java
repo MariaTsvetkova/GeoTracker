@@ -30,17 +30,29 @@ public final class R {
         public static final int oval_background=0x7f020001;
     }
     public static final class id {
-        public static final int action_history=0x7f090006;
-        public static final int action_home=0x7f090004;
-        public static final int action_track=0x7f090005;
-        public static final int editText1=0x7f090001;
-        public static final int fragmentContainer=0x7f090000;
-        public static final int startTracking=0x7f090002;
-        public static final int stopTracking=0x7f090003;
+        public static final int action_history=0x7f090010;
+        public static final int action_home=0x7f09000e;
+        public static final int action_track=0x7f09000f;
+        public static final int btnHistory=0x7f090003;
+        public static final int btnHome=0x7f090001;
+        public static final int btnStartTracking=0x7f09000c;
+        public static final int btnStopTracking=0x7f09000d;
+        public static final int btnTrackWorkout=0x7f090002;
+        public static final int button1=0x7f090007;
+        public static final int button2=0x7f090008;
+        public static final int etTrackerName=0x7f09000b;
+        public static final int fragmentContainer=0x7f090004;
+        public static final int listTracker=0x7f090006;
+        public static final int switchInternet=0x7f090009;
+        public static final int tvBtnAction=0x7f090000;
+        public static final int tvRecordsInfo=0x7f090005;
+        public static final int tvTrackerName=0x7f09000a;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int track_workout=0x7f030001;
+        public static final int history_fragment=0x7f030001;
+        public static final int home_fragment=0x7f030002;
+        public static final int track_workout=0x7f030003;
     }
     public static final class menu {
         public static final int main=0x7f080000;
