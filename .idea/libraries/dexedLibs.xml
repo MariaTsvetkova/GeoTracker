@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="dexedLibs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/GeoTracker/bin/dexedLibs/google-play-services_lib-99f3baa67ea3551cd36bce73dba83f06.jar!/" />
+      <root url="jar://$PROJECT_DIR$/GeoTracker/bin/dexedLibs/android-support-v4-2726d7903da33d87d7d5775ce5773471.jar!/" />
+      <root url="jar://$PROJECT_DIR$/GeoTracker/bin/dexedLibs/google-play-services-f1532d8f500718bd141b1a070259ab80.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

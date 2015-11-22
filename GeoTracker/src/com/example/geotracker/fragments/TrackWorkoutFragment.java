@@ -20,6 +20,7 @@ public class TrackWorkoutFragment extends Fragment implements OnClickListener {
 	private String trackerName = "";
 	private Button btnStopTracking;
 	private Button btnStartTracking;
+	private TrackWorkoutListener mListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,6 +33,7 @@ public class TrackWorkoutFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+
 		tvTrackerName = (TextView) getActivity().findViewById(
 				R.id.tvTrackerName);
 		etTrackerName = (EditText) getActivity().findViewById(
@@ -45,6 +47,10 @@ public class TrackWorkoutFragment extends Fragment implements OnClickListener {
 
 	}
 
+	public void setListener(TrackWorkoutListener listener) {
+		mListener = listener;
+	}
+
 	@Override
 	public void onClick(View v) {
 		trackerName = etTrackerName.getText().toString();
@@ -54,8 +60,8 @@ public class TrackWorkoutFragment extends Fragment implements OnClickListener {
 			etTrackerName.setText("");
 			etTrackerName.setVisibility(View.GONE);
 			tvTrackerName.setText("tracking " + trackerName);
-			Toast.makeText(getActivity(), "tracking name" + trackerName,
-					Toast.LENGTH_LONG).show();
+			mListener.startGPSRecord(trackerName);
+
 			break;
 		case R.id.btnStopTracking:
 			tvTrackerName.setText("Its saved " + trackerName);
