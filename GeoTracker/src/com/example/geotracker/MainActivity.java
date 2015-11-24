@@ -1,5 +1,9 @@
 package com.example.geotracker;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.location.Location;
@@ -16,6 +20,8 @@ import com.example.geotracker.fragments.HistoryFragment;
 import com.example.geotracker.fragments.HomeFragment;
 import com.example.geotracker.fragments.TrackWorkoutFragment;
 import com.example.geotracker.fragments.TrackWorkoutListener;
+import com.example.geotracker.util.JsonUtil;
+import com.example.geotracker.util.Tracker;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -58,6 +64,11 @@ public class MainActivity extends Activity implements OnClickListener,
 	private static int DISPLACEMENT = 10; // 10 meters
 
 	// ////////////////////////////
+
+	private Tracker tracker;
+	private JsonUtil jSonUtil;
+	private String trackerName;
+	private List<Location> locationList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +222,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		LocationServices.FusedLocationApi.requestLocationUpdates(
 				mGoogleApiClient, mLocationRequest, this);
+		locationList.add(mLastLocation);
 
 	}
 
@@ -263,7 +275,7 @@ public class MainActivity extends Activity implements OnClickListener,
 				"the tracker name is " + trackerName, Toast.LENGTH_LONG).show();
 
 		// displayLocation();
-
+		this.trackerName = trackerName;
 		togglePeriodicLocationUpdates();
 
 	}
@@ -271,6 +283,13 @@ public class MainActivity extends Activity implements OnClickListener,
 	private void togglePeriodicLocationUpdates() {
 		Button btnStartLocationRecord = (Button) findViewById(R.id.btnStartTracking);
 		if (!mRequestingLocationUpdates) {
+			tracker = new Tracker();
+			tracker.setTrackerName(trackerName);
+			tracker.setStartDate(new Date());
+
+			locationList = new ArrayList();
+
+			trackerName = "";
 			// Changing the button text
 			btnStartLocationRecord.setText("Stop record");
 			mRequestingLocationUpdates = true;
@@ -282,6 +301,8 @@ public class MainActivity extends Activity implements OnClickListener,
 		} else {
 
 			btnStartLocationRecord.setText("Start record");
+			tracker.setLocation(locationList);
+			tracker.setEndDate(new Date());
 
 			mRequestingLocationUpdates = false;
 
