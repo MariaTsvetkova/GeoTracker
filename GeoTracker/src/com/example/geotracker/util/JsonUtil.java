@@ -1,5 +1,13 @@
 package com.example.geotracker.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,38 +19,48 @@ import android.util.Log;
 
 public class JsonUtil {
 
-	private static final String LATITUDE = "com.example.geotracker.util.name.LATITUDE";
+	private static final String LOCATION = "com.example.geotracker.util.name.LOCATION";
+	private static final String TRACKER_NAME = "com.example.geotracker.util.name.TRACKER_NAME";
+	private static final String START_DATE = "com.example.geotracker.util.name.START_DATE";
+	private static final String END_DATE = "com.example.geotracker.util.name.END_DATE";
+	private static final String DISTANCE = "com.example.geotracker.util.name.DISTANCE";
 	private static final String LONGITUDE = "com.example.geotracker.util.name.LONGITUDE";
+	private static final String LATTITUDE = "com.example.geotracker.util.name.LATTITUDE";
+
 	private static final String TAG = "myLog";
 	private Context context;
 
 	public JsonUtil(Context context) {
 		this.context = context;
+
 	}
 
-	/**
-	 * Save a location/key pair.
-	 * 
-	 * @param key
-	 *            the key associated with the location
-	 * @param location
-	 *            the location for the key
-	 * @return true if saved successfully false otherwise
-	 */
-	public boolean saveLocation(String key, Location location) {
-		Log.v(TAG, "Saving location");
+	public boolean saveTracker(String key, Tracker tracker) {
+		Log.v(TAG, "Saving tracker");
 		SharedPreferences preferences;
 		try {
-			JSONObject locationJson = new JSONObject();
+			JSONArray locationJSONArray = new JSONArray();
+			for (Location loc : tracker.getLocation()) {
+				JSONObject locationJson = new JSONObject();
+				locationJson.put(LONGITUDE, loc.getLongitude());
+				locationJson.put(LATTITUDE, loc.getLatitude());
+				locationJSONArray.put(locationJson);
+			}
 
-			locationJson.put(LATITUDE, location.getLatitude());
-			locationJson.put(LONGITUDE, location.getLongitude());
+			JSONObject trackerJson = new JSONObject();
+
+			trackerJson.put(LOCATION, locationJSONArray);
+			trackerJson.put(TRACKER_NAME, tracker.getTrackerName());
+			trackerJson.put(START_DATE, String.valueOf(tracker.getStartDate()));
+			trackerJson.put(END_DATE, String.valueOf(tracker.getEndDate()));
+			trackerJson.put(DISTANCE, tracker.getDistance());
+
 			// other location data
 			preferences = PreferenceManager
 					.getDefaultSharedPreferences(context);
 
 			SharedPreferences.Editor edit = preferences.edit();
-			edit.putString(key, locationJson.toString());
+			edit.putString(key, trackerJson.toString());
 			edit.commit();
 		} catch (JSONException e) {
 			Log.v(TAG, "JSON Exception", e);
@@ -55,28 +73,47 @@ public class JsonUtil {
 		return true;
 	}
 
-	/**
-	 * Gets location data for a key.
-	 * 
-	 * @param key
-	 *            the key for the saved location
-	 * @return a {@link Location} object or null if there is no entry for the
-	 *         key
-	 */
-	public Location getLocation(String key) {
+	public Tracker getTrackern(String key) {
 		Log.v(TAG, "Retrieving location at key {} " + key);
 		try {
 			SharedPreferences preferences = PreferenceManager
 					.getDefaultSharedPreferences(context);
 			String json = preferences.getString(key, null);
-
+			JSONArray jLocationArray;
+			List<Location> locationList = new ArrayList();
+			Location location;
 			if (json != null) {
-				JSONObject locationJson = new JSONObject(json);
-				Location location = new Location("");
-				location.setLatitude(locationJson.getInt(LATITUDE));
-				location.setLongitude(locationJson.getInt(LONGITUDE));
-				Log.v(TAG, "Returning location: {}" + location);
-				return location;
+				JSONObject trackerJson = new JSONObject(json);
+				Tracker tracker = new Tracker();
+
+				// //////////////////////
+
+				jLocationArray = trackerJson.optJSONArray(LOCATION);
+				if (jLocationArray != null) {
+
+					for (int i = 0; i < jLocationArray.length(); i++) {
+						location = new Location("");
+						JSONObject locationJson = jLocationArray
+								.getJSONObject(i);
+						location.setLongitude(locationJson.getDouble(LONGITUDE));
+						location.setLatitude(locationJson.getDouble(LATTITUDE));
+						locationList.add(location);
+
+					}
+				}
+
+				// /////////////////////////
+
+				tracker.setLocation(locationList);
+				tracker.setTrackerName(trackerJson.getString(TRACKER_NAME));
+				tracker.setStartDate(parseDateTime(trackerJson
+						.getString(START_DATE)));
+				tracker.setEndDate(parseDateTime(trackerJson
+						.getString(END_DATE)));
+				tracker.setDistance(trackerJson.getDouble(DISTANCE));
+
+				// Log.v(TAG, "Returning location: {}" + location);
+				return tracker;
 			}
 		} catch (JSONException e) {
 			Log.v(TAG, "JSON Exception " + e);
@@ -101,6 +138,23 @@ public class JsonUtil {
 
 		return d;
 
+	}
+
+	public static Date parseDateTime(String dateString) {
+		DateFormat fmt;
+		if (dateString.endsWith("Z")) {
+			fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		} else {
+			fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		}
+		Date date = new Date();
+		try {
+			date = fmt.parse(dateString);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return date;
 	}
 
 }

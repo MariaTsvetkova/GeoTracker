@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 public class HomeFragment extends Fragment {
 
+	private Switch switcher;
+	private boolean isConnected;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -26,35 +29,13 @@ public class HomeFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		Switch switcher = (Switch) view.findViewById(R.id.switchInternet);
-
-		if (!isNetworkConnected(getActivity())) {
-			switcher.setChecked(false);
-		} else {
-			switcher.setChecked(true);
-		}
+		switcher = (Switch) view.findViewById(R.id.switchInternet);
+		switcher.setChecked(isConnected);
 
 	}
 
-	public boolean isNetworkConnected(Context context) {
-
-		ConnectivityManager cm = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netinfo = cm.getActiveNetworkInfo();
-
-		if (netinfo != null && netinfo.isConnectedOrConnecting()) {
-			android.net.NetworkInfo wifi = cm
-					.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-			android.net.NetworkInfo mobile = cm
-					.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-			if ((mobile != null && mobile.isConnectedOrConnecting())
-					|| (wifi != null && wifi.isConnectedOrConnecting()))
-				return true;
-			else
-				return false;
-		} else
-			return false;
+	public void setNetworkConnected(boolean isConnected) {
+		this.isConnected = isConnected;
 	}
 
 }
